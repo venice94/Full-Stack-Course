@@ -88,7 +88,10 @@ def search_venues(search_term):
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
-
+  search=f'%{search_term}%'
+  venues=Venue.query(Venue.columns['id','name']).filter_by(Venue.name.like(search)).all()
+  num_upcoming_shows=venues.shows.count()
+  count=venues.count()
 
   response={
     "count": count,
