@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy import func
+from sqlalchemy.sql import label
 
 db = SQLAlchemy()
 
