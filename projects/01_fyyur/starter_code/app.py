@@ -95,7 +95,7 @@ def search_venues():
 
   response={
     "count": count,
-    "data": [json.dumps(venues)]
+    "data": [jsonify(venues)]
   }
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
