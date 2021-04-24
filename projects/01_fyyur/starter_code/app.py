@@ -2,10 +2,9 @@
 # Imports
 #----------------------------------------------------------------------------#
 
-import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, Response, flash, redirect, url_for, jsonify, json
 from flask_moment import Moment
 from flask_migrate import Migrate
 import logging
@@ -52,7 +51,6 @@ app.jinja_env.filters['datetime'] = format_datetime
 def index():
   return render_template('pages/home.html')
 
-
 #  Venues
 #  ----------------------------------------------------------------
 
@@ -60,6 +58,11 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_shows should be aggregated based on number of upcoming shows per venue.
+
+  city_states = Venue.query(Venue.city,Venue.state).distinct()
+  #for each area in city_states:
+   # venues=Venue.query.filter(Venue.city==area.city,Venue.state==area.state).join(Show,Show.venue_id==Venue.id).with_entities(Venue.id,Venue.name,label('num_upcoming_shows',func.count(Show.id))).group_by(Venue.id,Venue.name).all()
+  
   data=[{
     "city": "San Francisco",
     "state": "CA",
@@ -95,7 +98,7 @@ def search_venues():
 
   response={
     "count": count,
-    "data": [jsonify(venues)]
+    "data": venues
   }
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
@@ -411,7 +414,7 @@ if not app.debug:
 
 # Default port:
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
 
 # Or specify port manually:
 '''
