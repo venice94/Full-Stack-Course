@@ -66,7 +66,7 @@ def venues():
       "venues": [{
         "id":venue.id,
         "name":venue.name,
-        "num_upcoming_shows":venue_show.num_upcoming_shows
+        "num_upcoming_shows":venue.num_upcoming_shows
       }]} for venue in venue_show]
   
   data=[{
@@ -90,7 +90,7 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
-  return render_template('pages/venues.html', result);
+  return render_template('pages/venues.html', areas=result);
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
