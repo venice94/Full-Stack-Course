@@ -416,7 +416,7 @@ if not app.debug:
 
 # Default port:
 if __name__ == '__main__':
-    app.run(host='172.17.219.137')
+    app.run()
 
 # Or specify port manually:
 '''
