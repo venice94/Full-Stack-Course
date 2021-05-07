@@ -70,28 +70,6 @@ def venues():
       }]} for venue in venue_show]
 
     return render_template('pages/venues.html', areas=result)
-  
-  # data=[{
-  #  "city": "San Francisco",
-  #  "state": "CA",
-  #  "venues": [{
-  #    "id": 1,
-  #    "name": "The Musical Hop",
-  #    "num_upcoming_shows": 0,
-  #  }, {
-  #    "id": 3,
-  #    "name": "Park Square Live Music & Coffee",
-  #    "num_upcoming_shows": 1,
-  #  }]
-  #}, {
-  #  "city": "New York",
-  #  "state": "NY",
-  #  "venues": [{
-  #    "id": 2,
-  #    "name": "The Dueling Pianos Bar",
-  #    "num_upcoming_shows": 0,
-  #  }]
-  #}]
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -107,12 +85,33 @@ def search_venues():
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-  # shows the venue page with the given venue_id
-  # TODO: replace with real venue data from the venues table, using venue_id
+  venue_info = Venue.query.get(venue_id)
+  upcoming_shows = venue_info.shows.join(Artist,Artist.id==Show.artist_id).filter(Show.start_time>func.now()).with_entities(Show.artist_id,Artist.name.label('artist_name'),Artist.image_link.label('artist_image_link'),Show.start_time).all()
+  past_shows = venue_info.shows.join(Artist,Artist.id==Show.artist_id).filter(Show.start_time<=func.now()).with_entities(Show.artist_id,Artist.name.label('artist_name'),Artist.image_link.label('artist_image_link'),Show.start_time).all()
   
-  data = Venue.query.filter(Venue.id==venue_id).all()
+  upcoming_shows_count = len(upcoming_shows)
+  past_shows_count = len(past_shows)
 
-  return render_template('pages/show_venue.html', venue=data)
+  result = {
+    "id":venue_info.id,
+    "name":venue_info.name,
+    "city":venue_info.city,
+    "state":venue_info.state,
+    "address":venue_info.address,
+    "phone":venue_info.phone,
+    "genres":venue_info.genres,
+    "image_link":venue_info.image_link,
+    "facebook_link":venue_info.facebook_link,
+    "website":venue_info.website,
+    "seeking_talent":venue_info.seeking_talent,
+    "seeking_description":venue_info.seeking_description,
+    "upcoming_shows_count":upcoming_shows_count,
+    "past_shows_count":past_shows_count,
+    "upcoming_shows":upcoming_shows,
+    "past_shows":past_shows
+  }
+
+  return render_template('pages/show_venue.html', venue=result)
 
 #  Create Venue
 #  ----------------------------------------------------------------
