@@ -67,7 +67,7 @@ def venues():
     data['state'] = area.state
     venues = []
     for i in range(len(venue_show)):
-      venue={}
+      venue = {}
       show = venue_show[i]
       venue['id'] = show.id
       venue['name'] = show.name
