@@ -20,6 +20,7 @@ class Venue(db.Model):
     website = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean, nullable=False, default=True)
     seeking_description = db.Column(db.String(1000))
+    created_date = db.Column(db.DateTime, nullable=False)
     shows = db.relationship('Show',backref='venue',lazy='dynamic')
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
@@ -38,6 +39,7 @@ class Artist(db.Model):
     website = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, nullable=False,default=True)
     seeking_description = db.Column(db.String(1000))
+    created_date = db.Column(db.DateTime, nullable=False)
     shows = db.relationship('Show',backref='artist',lazy='dynamic')
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate

@@ -168,7 +168,8 @@ def create_venue_submission():
       facebook_link=form.facebook_link.data,
       website=form.website_link.data,
       seeking_talent=form.seeking_talent.data,
-      seeking_description=form.seeking_description.data
+      seeking_description=form.seeking_description.data,
+      created_date=func.now()
       )
     db.session.add(data)
     db.session.commit()
@@ -352,7 +353,8 @@ def create_artist_submission():
       facebook_link=form.facebook_link.data,
       website=form.website_link.data,
       seeking_venue=form.seeking_venue.data,
-      seeking_description=form.seeking_description.data
+      seeking_description=form.seeking_description.data,
+      created_date=func.now()
     )
     db.session.add(artist)
     db.session.commit()
