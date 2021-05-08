@@ -102,7 +102,7 @@ def venues():
 @app.route('/venues/search', methods=['POST']) # Done
 def search_venues():
   search_term=request.form['search_term']
-  venues=Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).all()
+  venues=Venue.query.filter(or_(Venue.name.ilike(f'%{search_term}%'),(Venue.city + ', ' + Venue.state)==search_term)).all()
   count=len(venues)
 
   response={
@@ -211,7 +211,7 @@ def artists():
 @app.route('/artists/search', methods=['POST']) # Done
 def search_artists():
   search_term=request.form['search_term']
-  artists=Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).all()
+  artists=Artist.query.filter(or_(Artist.name.ilike(f'%{search_term}%'),(Artist.city + ', ' + Artist.state) == search_term)).all()
   count=len(artists)
 
   response={

@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.sql import label
 
 db = SQLAlchemy()
