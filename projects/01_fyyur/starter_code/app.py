@@ -54,52 +54,50 @@ def index():
 #  Venues
 #  ----------------------------------------------------------------
 
-@app.route('/venues') # TO FIX: GROUP BY CITY/STATE AND SHOW >1 CITY/STATE
+@app.route('/venues') # Done
 def venues():
-  city_states = Venue.query.distinct(Venue.city,Venue.state).all()
+  city_states = Venue.query.with_entities(Venue.city,Venue.state).distinct().all()
   result=[]
   for area in city_states:
-    area_venue = Venue.query.filter(Venue.city==area.city,Venue.state==area.state).all()
-    area_venues = []
-    for venue in area_venues:
-      num_upcoming_shows = 0
-      for show in venue.show:
-        if show.start_time > datetime.now():
-          num_upcoming_shows += 1
-      area_venues.append({
-        'id':venue.id,
-        'name':venue.name,
-        'num_upcoming_shows': num_upcoming_shows
+      area_venue = Venue.query.filter(Venue.city==area.city,Venue.state==area.state)
+      venue_show = area_venue.join(Show,Venue.id==Show.venue_id, isouter=True).with_entities(Venue.id,Venue.name,func.count(Show.id).label('num_upcoming_shows')).group_by(Venue.id,Venue.name).all()
+      venues = []
+      for venue in venue_show:
+          venues.append({
+            'id':venue.id,
+            'name':venue.name,
+            'num_upcoming_shows':venue.num_upcoming_shows
+          })
+      result.append({
+        'city':area.city,
+        'state':area.state,
+        'venues':venues
       })
-    result.append({
-      'city':area.city,
-      'state':area.state,
-      'venues':area_venues
-    })
 
-    locals = []
-    venues = Venue.query.all()
-    places = Venue.query.distinct(Venue.city, Venue.state).all()
-    for place in places:
-        tmp_venues = []
-        for venue in venues:
-            if venue.city == place.city and venue.state == place.state:
-                num_upcoming_shows = 0
-                for show in venue.shows:
-                    if show.start_time > datetime.now():
-                        num_upcoming_shows += 1
-                tmp_venues.append({
-                    'id': venue.id,
-                    'name': venue.name,
-                    'num_upcoming_shows': num_upcoming_shows
-                })
-        locals.append({
-            'city': place.city,
-            'state': place.state,
-            'venues': tmp_venues
-        })
+  #Cleaner solution:
+  #result = []
+  #venues = Venue.query.all()
+  #places = Venue.query.distinct(Venue.city, Venue.state).all()
+  #for place in places:
+  #    tmp_venues = []
+  #    for venue in venues:
+  #        if venue.city == place.city and venue.state == place.state:
+  #            num_upcoming_shows = 0
+  #            for show in venue.shows:
+  #                if show.start_time > datetime.now():
+  #                    num_upcoming_shows += 1
+  #            tmp_venues.append({
+  #                'id': venue.id,
+  #                'name': venue.name,
+  #                'num_upcoming_shows': num_upcoming_shows
+  #            })
+  #    result.append({
+  #        'city': place.city,
+  #        'state': place.state,
+  #        'venues': tmp_venues
+  #    })
 
-    return render_template('pages/venues.html', areas=result)
+  return render_template('pages/venues.html', areas=result)
 
 @app.route('/venues/search', methods=['POST']) # Done
 def search_venues():
