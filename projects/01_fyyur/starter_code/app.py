@@ -4,7 +4,7 @@
 
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for, jsonify, json
+from flask import Flask, render_template, request, Response, flash, redirect, url_for, jsonify, json, abort
 from flask_moment import Moment
 from flask_migrate import Migrate
 import logging
@@ -56,25 +56,48 @@ def index():
 
 @app.route('/venues') # TO FIX: GROUP BY CITY/STATE AND SHOW >1 CITY/STATE
 def venues():
-  city_states = Venue.query.with_entities(Venue.city,Venue.state).distinct().all()
+  city_states = Venue.query.distinct(Venue.city,Venue.state).all()
   result=[]
-  for i in range(len(city_states)):
-    data = {}
-    area = city_states[i]
-    area_venue = Venue.query.filter(Venue.city==area.city,Venue.state==area.state)
-    venue_show = area_venue.join(Show,Venue.id==Show.venue_id).with_entities(Venue.id,Venue.name,func.count(Show.id).label('num_upcoming_shows')).group_by(Venue.id,Venue.name).all()
-    data['city'] = area.city
-    data['state'] = area.state
-    venues = []
-    for i in range(len(venue_show)):
-      venue = {}
-      show = venue_show[i]
-      venue['id'] = show.id
-      venue['name'] = show.name
-      venue['num_upcoming_shows'] = show.num_upcoming_shows
-      venues.append(venue)
-    data['venues'] = venues
-    result.append(data)
+  for area in city_states:
+    area_venue = Venue.query.filter(Venue.city==area.city,Venue.state==area.state).all()
+    area_venues = []
+    for venue in area_venues:
+      num_upcoming_shows = 0
+      for show in venue.show:
+        if show.start_time > datetime.now():
+          num_upcoming_shows += 1
+      area_venues.append({
+        'id':venue.id,
+        'name':venue.name,
+        'num_upcoming_shows': num_upcoming_shows
+      })
+    result.append({
+      'city':area.city,
+      'state':area.state,
+      'venues':area_venues
+    })
+
+    locals = []
+    venues = Venue.query.all()
+    places = Venue.query.distinct(Venue.city, Venue.state).all()
+    for place in places:
+        tmp_venues = []
+        for venue in venues:
+            if venue.city == place.city and venue.state == place.state:
+                num_upcoming_shows = 0
+                for show in venue.shows:
+                    if show.start_time > datetime.now():
+                        num_upcoming_shows += 1
+                tmp_venues.append({
+                    'id': venue.id,
+                    'name': venue.name,
+                    'num_upcoming_shows': num_upcoming_shows
+                })
+        locals.append({
+            'city': place.city,
+            'state': place.state,
+            'venues': tmp_venues
+        })
 
     return render_template('pages/venues.html', areas=result)
 
@@ -93,6 +116,8 @@ def search_venues():
 @app.route('/venues/<int:venue_id>') # Done
 def show_venue(venue_id):
   venue_info = Venue.query.get(venue_id)
+  if not venue_info:
+    abort(404)
   upcoming_shows = venue_info.shows.join(Artist,Artist.id==Show.artist_id).filter(Show.start_time>func.now()).with_entities(Show.artist_id,Artist.name.label('artist_name'),Artist.image_link.label('artist_image_link'),Show.start_time).all()
   past_shows = venue_info.shows.join(Artist,Artist.id==Show.artist_id).filter(Show.start_time<=func.now()).with_entities(Show.artist_id,Artist.name.label('artist_name'),Artist.image_link.label('artist_image_link'),Show.start_time).all()
   
@@ -128,7 +153,7 @@ def create_venue_form():
   form = VenueForm()
   return render_template('forms/new_venue.html', form=form)
 
-@app.route('/venues/create', methods=['POST'])
+@app.route('/venues/create', methods=['POST']) # Done
 def create_venue_submission():
   form=VenueForm(request.form)
   error=False
@@ -163,7 +188,7 @@ def create_venue_submission():
 
   return render_template('pages/home.html')
 
-@app.route('/venues/<venue_id>/delete', methods=['DELETE']) # TO DO
+@app.route('/venues/<venue_id>/delete', methods=['DELETE']) # Done
 def delete_venue(venue_id):
   venue=Venue.query.get(venue_id)
   error=False
@@ -202,7 +227,7 @@ def show_artist(artist_id):
   artist_info = Artist.query.get(artist_id)
 
   if not artist_info:
-    return server_error(404)
+    return not_found_error(0)
   
   upcoming_shows = artist_info.shows.join(Venue,Venue.id==Show.venue_id).filter(Show.start_time>func.now()).with_entities(Show.venue_id,Venue.name.label('venue_name'),Venue.image_link.label('venue_image_link'),Show.start_time).all()
   past_shows = artist_info.shows.join(Venue,Venue.id==Show.venue_id).filter(Show.start_time<=func.now()).with_entities(Show.venue_id,Venue.name.label('venue_name'),Venue.image_link.label('venue_image_link'),Show.start_time).all()
@@ -264,7 +289,7 @@ def edit_artist_submission(artist_id):
   finally:
     db.session.close()
   if error:
-    return server_error(500)
+    return abort(500)
 
   return redirect(url_for('show_artist', artist_id=artist_id))
 
@@ -301,7 +326,7 @@ def edit_venue_submission(venue_id):
   finally:
     db.session.close()
   if error:
-    return server_error(500)
+    return abort(500)
 
   return redirect(url_for('show_venue', venue_id=venue_id))
 
