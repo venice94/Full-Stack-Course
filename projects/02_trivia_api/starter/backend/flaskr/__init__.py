@@ -73,7 +73,7 @@ def create_app(test_config=None):
             selection = Question.query.filter(
                 Question.category == CURRENT_CATEGORY_ID).order_by(Question.id).all()
 
-            if len(questions) == 0:
+            if len(selection) == 0:
                 abort(404)
 
             questions = paginate_questions(request, selection)
@@ -95,21 +95,23 @@ def create_app(test_config=None):
         global CURRENT_CATEGORY_ID
 
         CURRENT_CATEGORY_ID = cat_id
-
+    
         try:
-            current_category = Category.query.filter(
+            current_category_id = Category.query.filter(
               Category.id == CURRENT_CATEGORY_ID).one_or_none()
-            current_category = current_category.type
 
-            if current_category is None:
+            if current_category_id is None:
                 abort(404)
+
+            current_category = current_category.type
 
             selection = Question.query.filter(
                 Question.category == CURRENT_CATEGORY_ID).order_by(Question.id).all()
-            questions = paginate_questions(request, selection)
 
-            if len(questions) == 0:
+            if len(selection) == 0:
                 abort(404)
+            
+            questions = paginate_questions(request, selection)
 
             return jsonify({
                 'success': True,
@@ -156,6 +158,7 @@ def create_app(test_config=None):
             question = Question(
                 question=new_question, answer=new_answer,
                 category=new_category, difficulty=new_difficulty)
+
             question.insert()
 
             return jsonify({

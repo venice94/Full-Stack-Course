@@ -30,6 +30,13 @@ class TriviaTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_delete_question(self):
+        res = self.client().delete('/questions/23')
+        data = json.loads(res.data)
+        
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
     def test_404_get_questions(self):
         res = self.client().get('/questions?page=1000')
         data = json.loads(res.data)
@@ -74,13 +81,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
         self.assertTrue(len(data['questions']))
-
-    def test_delete_question(self):
-        res = self.client().delete('/questions/22')
-        data = json.loads(res.data)
-        
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True) 
 
     def test_404_delete_question(self):
         res = self.client().delete('/questions/1000000')
