@@ -136,7 +136,7 @@ Sample Response:
 GET '/categories/<cat_id>/questions'
 - Fetches an array of questions in the specified category, with their answers and difficulty levels.
 - Request arguments: category id
-- Returns: Current category, number of questions in the current category as well as an array of te questions in the current category.
+- Returns: Current category, number of questions in the current category as well as an array of the questions in the current category.
 Sample Request: localhost:5000/categories/1/questions
 Sample Response:
 "current_category": "Science",
