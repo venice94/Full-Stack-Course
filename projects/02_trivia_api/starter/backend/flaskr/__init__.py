@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy import func
 import random
-import traceback
+from werkzeug.exceptions import HTTPException
 
 from models import setup_db, Question, Category
 
@@ -43,8 +43,11 @@ def create_app(test_config=None):
                 'categories': formatted_categories
             })
 
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     def paginate_questions(request, selection):
         # paginate questions retrieved from databased
@@ -86,8 +89,11 @@ def create_app(test_config=None):
                 'categories': formatted_cats
             })
 
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.route('/categories/<int:cat_id>/questions', methods=['GET'])
     def get_cat_questions(cat_id):
@@ -99,11 +105,11 @@ def create_app(test_config=None):
         try:
             current_category_id = Category.query.filter(
               Category.id == CURRENT_CATEGORY_ID).one_or_none()
-
+            
             if current_category_id is None:
                 abort(404)
 
-            current_category = current_category.type
+            current_category = current_category_id.type
 
             selection = Question.query.filter(
                 Question.category == CURRENT_CATEGORY_ID).order_by(Question.id).all()
@@ -120,8 +126,11 @@ def create_app(test_config=None):
                 'total_questions': len(selection)
             })
 
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.route('/questions/<int:qn_id>', methods=['DELETE'])
     def delete_question(qn_id):
@@ -141,8 +150,11 @@ def create_app(test_config=None):
                 'success': True
             })
 
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.route('/questions', methods=['POST'])
     def add_question():
@@ -165,8 +177,11 @@ def create_app(test_config=None):
                 'success': True
             })
 
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.route('/questions/search', methods=['POST'])
     def search_questions():
@@ -183,8 +198,11 @@ def create_app(test_config=None):
                 'success': True,
                 'questions': questions
             })
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.route('/quizzes', methods=['POST'])
     def quiz_questions():
@@ -212,8 +230,11 @@ def create_app(test_config=None):
                 "success": True,
                 "question": quiz_question.format()
             })
-        except:
-            abort(422)
+        except Exception as e:
+                if isinstance(e, HTTPException):
+                    abort(e.code)
+                else:
+                    abort(422)
 
     @app.errorhandler(404)
     def not_found(error):
