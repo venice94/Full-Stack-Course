@@ -25,7 +25,7 @@ def get_drinks():
 
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth(permission='get:drinks-detail')
-def get_drink_details():
+def get_drink_details(permission):
     drinks = Drink.query.all()
     if drinks is None:
         abort(404)
@@ -39,6 +39,7 @@ def add_drink(permission):
 
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
+    new_recipe = json.dumps([ingredient for ingredient in new_recipe])
 
     if new_title is None or new_recipe is None:
         abort(404)
