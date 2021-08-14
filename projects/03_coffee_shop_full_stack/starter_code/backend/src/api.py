@@ -34,19 +34,20 @@ def get_drink_details():
 
 @app.route('/drinks', methods=['POST'])
 @requires_auth(permission='post:drinks')
-def add_drink():
+def add_drink(permission):
     body = request.get_json()
 
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
-    print(new_title)
-    print(new_recipe)
 
     if new_title is None or new_recipe is None:
         abort(404)
 
     try:
         new_drink=Drink(title=new_title,recipe=new_recipe)
+        print(type(new_drink))
+        print(new_drink.title)
+        print(new_drink.recipe)
         new_drink.insert()
 
     except:
