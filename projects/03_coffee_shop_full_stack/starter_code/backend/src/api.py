@@ -39,10 +39,11 @@ def add_drink(permission):
 
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
-    new_recipe = json.dumps([ingredient for ingredient in new_recipe])
 
     if new_title is None or new_recipe is None:
         abort(404)
+
+    new_recipe = json.dumps([ingredient for ingredient in new_recipe])
 
     try:
         new_drink=Drink(title=new_title,recipe=new_recipe)
@@ -112,7 +113,7 @@ def unprocessable(error):
 def unprocessable(error):
     return jsonify({
         "success": False,
-        "error": 422,
+        "error": 404,
         "message": "resource not found"
     }), 404
 
