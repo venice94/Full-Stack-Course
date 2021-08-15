@@ -59,7 +59,7 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'permission_denied',
             'description': 'Permission not granted.'
-        })
+        },401)
     else:
         return True
 

@@ -24,7 +24,7 @@ def get_drinks():
     return jsonify({"success":True, "drinks":[drink.short() for drink in drinks]})
 
 @app.route('/drinks-detail', methods=['GET'])
-@requires_auth(permission='get:drinks-detail')
+@requires_auth("get:drinks-detail")
 def get_drink_details(permission):
     drinks = Drink.query.all()
     if drinks is None:
@@ -33,8 +33,8 @@ def get_drink_details(permission):
     return jsonify({"success":True, "drinks":[drink.long() for drink in drinks]})
 
 @app.route('/drinks', methods=['POST'])
-@requires_auth(permission='post:drinks')
-def add_drink(permission):
+@requires_auth("post:drinks")
+def add_drink(token):
     body = request.get_json()
 
     new_title = body.get('title', None)
@@ -47,24 +47,23 @@ def add_drink(permission):
 
     try:
         new_drink=Drink(title=new_title,recipe=new_recipe)
-        print(type(new_drink))
-        print(new_drink.title)
-        print(new_drink.recipe)
         new_drink.insert()
 
     except:
         abort(422)
 
-    return jsonify({"success":True, "drinks":[new_drink.short() for drink in new_drink]})
+    return jsonify({"success":True, "drinks":new_drink.long()})
 
 @app.route('/drinks/<id>', methods=['PATCH'])
-@requires_auth(permission='patch:drinks')
-def edit_drink(id):
+@requires_auth("patch:drinks")
+def edit_drink(token,id):
     drink_id = id
     body = request.get_json()
 
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
+    print(new_title)
+    print(new_recipe)
 
     drink = Drink.query.filter(Drink.id==drink_id).one_or_none()
     if drink is None:
@@ -75,18 +74,19 @@ def edit_drink(id):
             drink.title = new_title
             drink.update()
         
-        if new_receipe is not None:
+        if new_recipe is not None:
+            new_recipe = json.dumps([ingredient for ingredient in new_recipe])
             drink.recipe = new_recipe
             drink.update()
 
     except:
         abort(422)
 
-    return jsonify({"success":True, "drinks":[drink.long() for drink in drinks]})
+    return jsonify({"success":True, "drinks":drink.long()})
 
 @app.route('/drinks/<id>', methods=['DELETE'])
-@requires_auth(permission='delete:drinks')
-def delete_drink(id):
+@requires_auth("delete:drinks")
+def delete_drink(token,id):
     drink_id = id
 
     drink = Drink.query.filter(Drink.id==drink_id).one_or_none()
