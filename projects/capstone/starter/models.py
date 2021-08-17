@@ -13,9 +13,10 @@ def setup_db(app):
     db.init_app(app)
     db.create_all()
 
-    user = User(
+    user = Wallet_User(
+        id = 1,
         name='Test User',
-        created_date=date.today(),
+        created_date='2020-01-01',
         )
     user.insert()
 
@@ -26,7 +27,7 @@ def setup_db(app):
     )
     shop.insert()
 
-class User(db.Model):
+class Wallet_User(db.Model):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key = True)
@@ -35,11 +36,10 @@ class User(db.Model):
     status = Column(String(10), nullable = False, default = 'Active')
     transactions = db.relationship('Transaction', backref='user', lazy='dynamic')
 
-    def __init__(self, id, name, created_date, status):
+    def __init__(self, id, name, created_date):
         self.id = id
         self.name = name
         self.created_date = created_date
-        self.status = status
 
     def insert(self):
         db.session.add(self)
@@ -69,7 +69,7 @@ class Shop(db.Model):
     address = Column(String(100), nullable = True)
     transactions = db.relationship('Transaction', backref='shop', lazy='dynamic')
     
-    def __init__(self, id, name, industry, address):
+    def __init__(self, name, industry, address):
         self.id = id
         self.name = name
         self.industry = industry
@@ -104,8 +104,8 @@ class Transaction(db.Model):
   status = Column(String(10), nullable = False, default = 'Active')
   date = Column(Date, nullable = False)
   description = Column(String(120), nullable = True)
-  user_id = Column(Integer, db.ForeignKey('User.id'), nullable = False)
-  shop_id = Column(Integer, db.ForeignKey('Shop.id'), nullable = True)
+  user_id = Column(Integer, db.ForeignKey('user.id'), nullable = False)
+  shop_id = Column(Integer, db.ForeignKey('shop.id'), nullable = True)
 
   def __init__(self, id, type, amount, category, status, date, description, user_id, shop_id):
     self.id = id
