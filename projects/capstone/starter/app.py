@@ -1,9 +1,8 @@
-from models import Wallet_User, Shop, Transaction, setup_db
+from models import Wallet_User, Shop, Transaction, setup_db, db_drop_and_create_all
 from auth import requires_auth
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_cors import CORS
 from datetime import date
 from auth import AuthError, requires_auth
@@ -15,7 +14,7 @@ app.config.from_object('config')
 db = SQLAlchemy()
 setup_db(app)
 
-migrate = Migrate(app, db)
+db_drop_and_create_all()
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
@@ -35,19 +34,18 @@ def paginate_row(request, selection):
 
 @app.route('/users', methods = ['GET'])
 @requires_auth('get:all-users')
-def get_all_users():
+def get_all_users(token):
   users = Wallet_User.query.all()
   if users is None:
     abort(404)
 
   return jsonify({
     'success': True,
-    'user': paginate_row(users)
+    'user': paginate_row(request, users)
     })
 
 
 @app.route('/shops', methods = ['GET'])
-@requires_auth('get:all-shops')
 def get_all_shops():
   shops = Shop.query.all()
   if shops is None:
@@ -55,13 +53,13 @@ def get_all_shops():
 
   return jsonify({
     'success': True,
-    'shop': paginate_row(shops)
+    'shop': paginate_row(request, shops)
     })
 
 
 @app.route('/users/<user_id>', methods = ['GET'])
 @requires_auth('get:user')
-def get_one_user(user_id):
+def get_one_user(token, user_id):
   user = Wallet_User.query.filter(Wallet_User.id == user_id).one_or_none()
   if user is None:
     abort(404)
@@ -74,7 +72,7 @@ def get_one_user(user_id):
 
 @app.route('/users/<user_id>/transactions', methods = ['GET'])
 @requires_auth('get:user-transactions')
-def get_user_transactions(user_id):
+def get_user_transactions(token, user_id):
   selection = Transaction.query.filter(Transaction.user_id == user_id).all()
   if selection is None:
     abort(404)
@@ -90,7 +88,7 @@ def get_user_transactions(user_id):
 
 @app.route('/users/<user_id>', methods = ['PATCH'])
 @requires_auth('patch:user')
-def edit_user(user_id):
+def edit_user(token, user_id):
   user = Wallet_User.query.filter(Wallet_User.id == user_id).one_or_none()
   if user is None:
     abort(404)
@@ -122,7 +120,7 @@ def edit_user(user_id):
 
 @app.route('/users/<user_id>/transactions', methods = ['POST'])
 @requires_auth('post:user-transactions')
-def add_user_transaction(user_id):
+def add_user_transaction(token, user_id):
   body = request.get_json()
 
   new_type = body.get('type', None)
@@ -131,10 +129,10 @@ def add_user_transaction(user_id):
   new_description = body.get('description', None)
   new_shop_id = body.get('shop_id', None)
 
-  if type is None or amount is None or category is None:
+  if new_type is None or new_amount is None or new_category is None:
     abort(404)
 
-  if type not in TRANSACTION_TYPE:
+  if new_type not in TRANSACTION_TYPE:
     abort(422)
   
   new_transaction = Transaction(
@@ -160,7 +158,7 @@ def add_user_transaction(user_id):
   
 @app.route('/users/<user_id>', methods = ['DELETE'])
 @requires_auth('delete:user')
-def delete_user(user_id):
+def delete_user(token, user_id):
   user = Wallet_User.query.filter(Wallet_User.id == user_id).one_or_none()
   if user is None:
     abort(404)

@@ -1,40 +1,27 @@
 import os
 import unittest
 import json
+from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
-from flaskr import create_app
-from models import setup_db, User, Shop, Transaction
+from models import setup_db, db_drop_and_create_all, Wallet_User, Shop, Transaction
 
 class WalletTestCase(unittest.TestCase):
     """This class represents the trivia test case"""
 
     def setUp(self):
         """Define test variables and initialize app."""
-        self.app = create_app()
+        self.app = Flask(__name__)
         self.client = self.app.test_client
         self.database_name = "wallet_test"
         self.database_path = "postgres://{}:{}@{}/{}".format('sh_ubuntu', '93water94', 'localhost:5432', self.database_name)
-        setup_db(self.app, self.database_path)
 
         # binds the app to the current context
         with self.app.app_context():
-            self.db = SQLAlchemy()
-            self.db.init_app(self.app)
+            setup_db(self.app)
             # create all tables
-            self.db.create_all()
-            user = User(
-                name='Test User',
-                created_date=date.today(),
-                )
-            user.insert()
-
-            shop = Shop(
-                name='ABC Bookstore',
-                industry='Retail',
-                address='123 Studious Street'
-            )
-            shop.insert()
+            db_drop_and_create_all()
     
     def tearDown(self):
         """Executed after reach test"""
@@ -123,7 +110,6 @@ class WalletTestCase(unittest.TestCase):
 
     def test_add_user_transaction(self):
         res = self.client().get('/users/1', json={
-            'user_id': 1,
             'type': 'Income',
             'category': 'Salary',
             'amount': 5555.55,
@@ -150,9 +136,8 @@ class WalletTestCase(unittest.TestCase):
     
     def test_422_add_user_transaction(self):
         res = self.client().get('/users/1', json={
-            'user_id': 1,
             'type': 'Splurge',
-            'category': 'Luxury item'
+            'category': 'Luxury item',
             'amount': 100,
             'shop_id': 1
         })

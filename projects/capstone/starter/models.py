@@ -11,24 +11,26 @@ db = SQLAlchemy()
 def setup_db(app):
     db.app = app
     db.init_app(app)
-    db.create_all()
 
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
+    # add one demo row in each table which is helping in POSTMAN test
     user = Wallet_User(
-        id = 1,
         name='Test User',
         created_date='2020-01-01',
         )
-    user.insert()
-
     shop = Shop(
         name='ABC Bookstore',
         industry='Retail',
         address='123 Studious Street'
     )
+    
+    user.insert()
     shop.insert()
 
 class Wallet_User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'wallet_user'
 
     id = Column(Integer, primary_key = True)
     name = Column(String(50), nullable = False)
@@ -36,8 +38,7 @@ class Wallet_User(db.Model):
     status = Column(String(10), nullable = False, default = 'Active')
     transactions = db.relationship('Transaction', backref='user', lazy='dynamic')
 
-    def __init__(self, id, name, created_date):
-        self.id = id
+    def __init__(self, name, created_date):
         self.name = name
         self.created_date = created_date
 
@@ -70,7 +71,6 @@ class Shop(db.Model):
     transactions = db.relationship('Transaction', backref='shop', lazy='dynamic')
     
     def __init__(self, name, industry, address):
-        self.id = id
         self.name = name
         self.industry = industry
         self.address = address
@@ -104,15 +104,13 @@ class Transaction(db.Model):
   status = Column(String(10), nullable = False, default = 'Active')
   date = Column(Date, nullable = False)
   description = Column(String(120), nullable = True)
-  user_id = Column(Integer, db.ForeignKey('user.id'), nullable = False)
+  user_id = Column(Integer, db.ForeignKey('wallet_user.id'), nullable = False)
   shop_id = Column(Integer, db.ForeignKey('shop.id'), nullable = True)
 
-  def __init__(self, id, type, amount, category, status, date, description, user_id, shop_id):
-    self.id = id
+  def __init__(self, type, amount, category, date, description, user_id, shop_id):
     self.type = type
     self.amount = amount
     self.category = category
-    self.status = status
     self.date = date
     self.description = description
     self.user_id = user_id
