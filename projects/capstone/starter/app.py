@@ -17,7 +17,7 @@ setup_db(app)
 db_drop_and_create_all()
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
 
 ROWS_PER_PAGE = 10
 TRANSACTION_TYPE = ['Income', 'Expense']
@@ -31,6 +31,12 @@ def paginate_row(request, selection):
   current_results = rows[start:end]
 
   return current_results
+
+
+@app.route('/user-page', methods= ['GET'])
+def user_authenticated():
+  return "You have successfully logged in."
+
 
 @app.route('/users', methods = ['GET'])
 @requires_auth('get:all-users')

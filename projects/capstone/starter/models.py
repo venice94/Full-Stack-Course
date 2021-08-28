@@ -18,7 +18,7 @@ def db_drop_and_create_all():
     # add one demo row in each table which is helping in POSTMAN test
     user = Wallet_User(
         name='Test User',
-        created_date='2020-01-01',
+        created_date=date.today(),
         )
     shop = Shop(
         name='ABC Bookstore',
