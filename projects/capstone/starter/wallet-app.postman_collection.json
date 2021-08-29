@@ -1,0 +1,342 @@
+{
+	"info": {
+		"_postman_id": "c0a2789c-c383-41a2-b929-7b7958aacc62",
+		"name": "wallet-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Get all shops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/shops",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"shops"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Support agent",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all shops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/shops",
+							"path": [
+								"shops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1/transactions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhGLUhDSHg2WEI0eU54bS04VlNDSyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtdmVuaWNlLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MTE3NjUyOGYwZDEzMTAwNzFmZjJmMDAiLCJhdWQiOiJodHRwczovLzEyNy4wLjAuMTo1MDAwL3dhbGxldCIsImlhdCI6MTYzMDI0NzEyNSwiZXhwIjoxNjMwMzMzNTI1LCJhenAiOiJMak1HSmdKMzZQVmpLY2tzNjJzMHk4SHh4c2xNRHZ2ZSIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZ2V0OmFsbC1zaG9wcyIsImdldDphbGwtdXNlcnMiLCJnZXQ6dXNlciIsImdldDp1c2VyLXRyYW5zYWN0aW9ucyJdfQ.N-iqs2TXOPKSCNfCow-kkml-5euzBXc8MuI-ycOw2xRi6c5Bj5bSq7VPzZvCxJ3m5JadtHh2pivxqqTHRWEA0j9f67m-6GqBZPaVpDMOmIw0iThvrI2enSJKOHv6Nw5voWIT612R1Ysh0mX9il-JJzaUeyOtaC1LSZt5sGsudS4m-tcbZ8LLXhQaIeTiWBfivHkKL35KIcnbIUZwoBgnOnUnPcMpxbVbn2iE7cp6cbN1lasG-FDKvb4tL-1VbfycT7y8EuOOl3rawiODiET2tF8rF6oIN8TIkAPSt1hPcXdbUNKf6Si5fM5KqbNpxPKsKuOkveLTYzmd1UPemm4ezA",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Manager",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all shops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/shops",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"shops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1/transactions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"Deleted\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"Expense\",\r\n    \"category\": \"Food\",\r\n    \"amount\": 1234.12,\r\n    \"shop_id\": 1,\r\n    \"description\": \"dinner\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/1/transactions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhGLUhDSHg2WEI0eU54bS04VlNDSyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtdmVuaWNlLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExMzc0MzA5Mzg5MjUxNzU0ODQxOSIsImF1ZCI6Imh0dHBzOi8vMTI3LjAuMC4xOjUwMDAvd2FsbGV0IiwiaWF0IjoxNjMwMjQ1MjYyLCJleHAiOjE2MzAzMzE2NjIsImF6cCI6IkxqTUdKZ0ozNlBWaktja3M2MnMweThIeHhzbE1EdnZlIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6dXNlciIsImdldDphbGwtc2hvcHMiLCJnZXQ6YWxsLXVzZXJzIiwiZ2V0OnVzZXIiLCJnZXQ6dXNlci10cmFuc2FjdGlvbnMiLCJwYXRjaDp1c2VyIiwicG9zdDp1c2VyLXRyYW5zYWN0aW9ucyJdfQ.O2OpF6vud-N_-Lt6JS0wg-WbuQVvpWVIuWfSUa11RyM3MiWTQNLC2muiOcBYaAE7fiv9lDVVB6VhAE1opO4h9StFB_3yp_JbXrW_zpiJnMkLh_YT14-mdtXn_x2wI4faw9_KTPS0cKUZEd-dFrV7OIUUVpdHSSpQxoVxS5DOT8a8s6EV9DB3rAmvrcfkTzadGagSXSJ0x98q-uHjEYrsrjTFV0eMNdy2v5qItqPulQiAKLmK-bM7UV5a8FN-ToAlcSrz9PUGLWqB5NXX449k9XN1Zr5anEuNrJXe3F96DADUaJXT54lv_OWVNXvae4y0OPc7i3ejuTc1tCaxWSOWMQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:5000"
+		}
+	]
+}

@@ -10,7 +10,7 @@ from models import setup_db, db_drop_and_create_all, Wallet_User, Shop, Transact
 
 Manager_jwt = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhGLUhDSHg2WEI0eU54bS04VlNDSyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtdmVuaWNlLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExMzc0MzA5Mzg5MjUxNzU0ODQxOSIsImF1ZCI6Imh0dHBzOi8vMTI3LjAuMC4xOjUwMDAvd2FsbGV0IiwiaWF0IjoxNjI5NjE2OTAyLCJleHAiOjE2Mjk3MDMzMDIsImF6cCI6IkxqTUdKZ0ozNlBWaktja3M2MnMweThIeHhzbE1EdnZlIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6dXNlciIsImdldDphbGwtc2hvcHMiLCJnZXQ6YWxsLXVzZXJzIiwiZ2V0OnVzZXIiLCJnZXQ6dXNlci10cmFuc2FjdGlvbnMiLCJwYXRjaDp1c2VyIiwicG9zdDp1c2VyLXRyYW5zYWN0aW9ucyJdfQ.T70xlb3WnNRVpIazXlrxKx8FiCtSdZCQo2Mw2GQCNjoCVEPvHnwRqTUeir78R5JX8BXZqBqld569sMXTWvRS0PuuTLOra7OiWpr-P5_Uz8opUc7hZT3IvbwUVnSDDgbiCrgJJPM5DjLQ5JLx0uVEhpjBspSO_51RmFlFTf0exKzaDU4ADNJtTgGpwtEo6X0YX8ipemhtz54Q91qiJaWWHV23lRxB5zHfhvFqW-rFenh-r8atgqOlT-Sq8LmN23mcbDS5VOCTZY2Z_3qSbg2fLDRh3qm0NAeGkyfy1t6L191QyimuK4bgF53p501l_FIYBfU67HtBDvpzpVBK9cGYWQ'
+        'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhGLUhDSHg2WEI0eU54bS04VlNDSyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtdmVuaWNlLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExMzc0MzA5Mzg5MjUxNzU0ODQxOSIsImF1ZCI6Imh0dHBzOi8vMTI3LjAuMC4xOjUwMDAvd2FsbGV0IiwiaWF0IjoxNjMwMjQ1MjYyLCJleHAiOjE2MzAzMzE2NjIsImF6cCI6IkxqTUdKZ0ozNlBWaktja3M2MnMweThIeHhzbE1EdnZlIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6dXNlciIsImdldDphbGwtc2hvcHMiLCJnZXQ6YWxsLXVzZXJzIiwiZ2V0OnVzZXIiLCJnZXQ6dXNlci10cmFuc2FjdGlvbnMiLCJwYXRjaDp1c2VyIiwicG9zdDp1c2VyLXRyYW5zYWN0aW9ucyJdfQ.O2OpF6vud-N_-Lt6JS0wg-WbuQVvpWVIuWfSUa11RyM3MiWTQNLC2muiOcBYaAE7fiv9lDVVB6VhAE1opO4h9StFB_3yp_JbXrW_zpiJnMkLh_YT14-mdtXn_x2wI4faw9_KTPS0cKUZEd-dFrV7OIUUVpdHSSpQxoVxS5DOT8a8s6EV9DB3rAmvrcfkTzadGagSXSJ0x98q-uHjEYrsrjTFV0eMNdy2v5qItqPulQiAKLmK-bM7UV5a8FN-ToAlcSrz9PUGLWqB5NXX449k9XN1Zr5anEuNrJXe3F96DADUaJXT54lv_OWVNXvae4y0OPc7i3ejuTc1tCaxWSOWMQ'
     }
 
 class WalletTestCase(unittest.TestCase):
@@ -35,6 +35,7 @@ class WalletTestCase(unittest.TestCase):
 
     def test_get_all_users(self):
         res = self.client().get('/users', headers=Manager_jwt)
+        print(res.data)
         data = json.loads(res.data.decode('utf-8'))
 
         self.assertEqual(res.status_code, 200)
@@ -44,6 +45,7 @@ class WalletTestCase(unittest.TestCase):
     
     def test_404_get_all_users(self):
         res = self.client().get('/users?page=10000', headers=Manager_jwt)
+        print(res.data)
         data = json.loads(res.data.decode('utf-8'))
 
         self.assertEqual(res.status_code, 404)

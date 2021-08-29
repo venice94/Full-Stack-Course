@@ -26,8 +26,9 @@ def db_drop_and_create_all():
         address='123 Studious Street'
     )
     
-    user.insert()
-    shop.insert()
+    db.session.add(user)
+    db.session.add(shop)
+    db.session.commit()
 
 class Wallet_User(db.Model):
     __tablename__ = 'wallet_user'
