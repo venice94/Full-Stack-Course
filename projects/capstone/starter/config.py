@@ -10,5 +10,5 @@ DEBUG = True
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI ='postgresql://sh_ubuntu:93water94@localhost:5432/wallet'
+SQLALCHEMY_DATABASE_URI ='postgresql-flexible-05314'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
